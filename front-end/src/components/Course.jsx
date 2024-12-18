@@ -11,6 +11,7 @@ function Course() {
   const [proposalId, setProposalId] = useState("");
   const [voteOption, setVoteOption] = useState("");
   const [isVoteEnabled, setIsVoteEnabled] = useState(false);
+  const [finalizeProposalId, setFinalizeProposalId] = useState("");
 
   const contract_address = "0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7";
   const contract_abi = HedemyDAO.abi;
@@ -49,33 +50,45 @@ function Course() {
       const provider = new ethers.BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contract_address, contract_abi, signer);
-
-      console.log("The proposal id is ",proposalId);
-      console.log("The option value is ",voteOption)
       const vote = await contract.voteOnProposal(proposalId, voteOption);
       await vote.wait();
-      console.log("The vote:", vote);
-      console.log("The vote has:", vote.hash);
+      console.log("Vote transaction:", vote.hash);
     } catch (error) {
-      console.log("The error while voting-", error);
+      console.error("Error while voting:", error);
+    }
+  };
+
+  const finalize_course = async () => {
+    try {
+      const provider = new ethers.BrowserProvider(ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contract_address, contract_abi, signer);
+      
+      const finalize = await contract.finalizeProposal(finalizeProposalId);
+      await finalize.wait();
+      console.log("Proposal finalized:", finalize.hash);
+    } catch (error) {
+      console.error("Error finalizing proposal:", error);
     }
   };
 
   const handleProposalIdChange = (e) => {
-    const id = e.target.value;
-    setProposalId(id);
-    setIsVoteEnabled(id && voteOption);
+    setProposalId(e.target.value);
+    setIsVoteEnabled(e.target.value !== "" && voteOption !== "");
   };
 
   const handleVoteOptionChange = (e) => {
-    const option = e.target.value;
-    setVoteOption(option);
-    setIsVoteEnabled(proposalId && option);
+    setVoteOption(e.target.value);
+    setIsVoteEnabled(proposalId !== "" && e.target.value !== "");
+  };
+
+  const handleFinalizeProposalIdChange = (e) => {
+    setFinalizeProposalId(e.target.value);
   };
 
   return (
     <div>
-      <div
+      <div 
         className="flex flex-col items-center justify-center min-h-screen"
         style={{
           backgroundImage: `url(${bg_img})`,
@@ -87,7 +100,7 @@ function Course() {
           Cast your votes to approve the courses.
         </h1>
         <p className="text-lg text-center mb-6 px-2 text-white font-bold">
-          Only the DAO Members can vote. Connect Wallet to see your eligibility in the DAO.
+          Only the DAO Members can vote. Connect Wallet to see your eligibility in the DAO. 
         </p>
         {!walletConnected ? (
           <button
@@ -113,7 +126,10 @@ function Course() {
             >
               Total Proposals
             </button>
-            <button className="btn btn-active btn-neutral px-6 py-2 text-white">
+            <button
+              className="btn btn-active btn-neutral px-6 py-2 text-white"
+              onClick={() => document.getElementById('finalize_modal').showModal()}
+            >
               Finalize the Proposal
             </button>
           </div>
@@ -121,53 +137,52 @@ function Course() {
       </div>
 
       {/* Vote Modal */}
-        <dialog id="vote_modal" className="modal">
+      <dialog id="vote_modal" className="modal">
         <div className="modal-box">
-            <h3 className="font-bold text-lg text-white">Vote</h3>
-            <p className="py-4 text-white">Cast your vote on a proposal. Enter the ProposalID:</p>
-            <input
+          <h3 className="font-bold text-lg text-white">Vote</h3>
+          <p className="py-4 text-white">Cast your vote on a proposal.</p>
+          <input
             type="text"
             placeholder="Enter Proposal ID"
             className="input input-bordered w-full mb-4"
             value={proposalId}
             onChange={handleProposalIdChange}
-            />
-            <h4 className="font-bold text-md mb-2 text-white">Choose your vote below:</h4>
-            <div className="flex flex-col space-y-2 mb-4">
+          />
+          <h4 className="font-bold text-md mb-2 text-white">Choose your vote below:</h4>
+          <div className="flex flex-col space-y-2 mb-4">
             <label className="cursor-pointer">
-                <input
+              <input
                 type="radio"
                 name="voteOption"
                 value="true"
                 className="radio"
                 onChange={handleVoteOptionChange}
-                /> Approve Course
+              /> Approve Course
             </label>
             <label className="cursor-pointer">
-                <input
+              <input
                 type="radio"
                 name="voteOption"
                 value="false"
                 className="radio"
                 onChange={handleVoteOptionChange}
-                /> Reject Course
+              /> Reject Course
             </label>
-            </div>
-            <button
-            className="btn btn-outline btn-primary w-full text-sm"
+          </div>
+          <button
+            className="btn btn-active btn-neutral w-full text-sm"
             disabled={!isVoteEnabled}
             onClick={vote_proposal}
-            >
+          >
             Vote Now
-            </button>
-            <div className="modal-action">
+          </button>
+          <div className="modal-action">
             <form method="dialog">
-                <button className="btn">Close</button>
+              <button className="btn">Close</button>
             </form>
-            </div>
+          </div>
         </div>
-        </dialog>
-
+      </dialog>
 
       {/* Total Proposals Modal */}
       <dialog id="proposal_modal" className="modal">
@@ -178,6 +193,32 @@ function Course() {
               ? "Fetching the total number of proposals..."
               : `The total number of proposals passed in Hedemy DAO are ${proposalCount}.`}
           </p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* Finalize Proposal Modal */}
+      <dialog id="finalize_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Finalize Proposal</h3>
+          <p className="py-4">Enter the Proposal ID to finalize the course.</p>
+          <input
+            type="text"
+            placeholder="Enter Proposal ID"
+            className="input input-bordered w-full mb-4"
+            value={finalizeProposalId}
+            onChange={handleFinalizeProposalIdChange}
+          />
+          <button
+            className="btn btn-active btn-neutral w-full text-sm"
+            onClick={finalize_course}
+          >
+            Finalize the Course
+          </button>
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Close</button>
