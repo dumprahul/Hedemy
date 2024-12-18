@@ -1,6 +1,7 @@
 import React from 'react';
 import bg_img from '../img/bg.jpg';
 import hedera_img from '../img/h.jpg'
+import StakeOpenModal from './StakeOpenModal';
 
 function Stake() {
   return (
@@ -49,7 +50,7 @@ function Stake() {
             <h3 className="text-xl font-bold text-white">Course 4</h3>
             <p className="text-gray-300 mb-2">Explore innovative solutions and apply them to your field of study.</p>
             <p className="text-sm text-gray-300 mb-4">Status: Open</p>
-            <button className="btn btn-primary">Stake Now</button>
+            <StakeOpenModal />
           </div>
         </div>
       </div>
