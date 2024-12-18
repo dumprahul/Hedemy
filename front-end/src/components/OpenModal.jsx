@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { connectWallet } from "../components/ConnectWallet";
+import { connectWallet } from "../";
 import { ethers } from "ethers";
 import HedemyDAO from "../abi/Hedemy_DAO_abi.json"; // Import your contract ABI
 
@@ -18,6 +18,7 @@ export default function OpenModal() {
 
   const [transactionStatus, setTransactionStatus] = useState("");
   const [txHash, setTxHash] = useState("");
+  
 
 
   const contract_address="0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7";
@@ -96,7 +97,24 @@ export default function OpenModal() {
         setTransactionStatus("Transaction successful");
         setTxHash(tx.hash);
         console.log("Transaction details:", tx);
-        console.log(`Transaction details: https://hashscan.io/testnet/tx/${tx.hash}`);
+
+        const count = await contract.proposalCount();
+        console.log("Proposal Count:", count.toString());
+
+        // const vote= await contract.voteOnProposal(8,"true");
+        // await vote.wait();
+        // console.log("the vote",vote);
+        // console.log("the vote has",vote.hash);
+
+        // const get_proposals= await contract.voteOnProposal(8);
+        // await get_proposals.wait();
+        // console.log("proposal details",get_proposals);
+
+        const finalize_proposal= await contract.finalizeProposal(8);
+        await finalize_proposal.wait();
+        console.log("proposal details",finalize_proposal);
+
+
       } catch (error) {
         console.error("Error on send proposal", error);
         setTransactionStatus("Transaction failed.");
