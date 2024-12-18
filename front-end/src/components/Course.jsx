@@ -191,7 +191,7 @@ function Course() {
             </label>
           </div>
           <button
-            className="btn btn-active btn-neutral w-full text-sm"
+            className="btn btn-outline btn-primary w-full text-sm"
             disabled={!isVoteEnabled}
             onClick={vote_proposal}
           >
@@ -208,8 +208,8 @@ function Course() {
       {/* Total Proposals Modal */}
       <dialog id="proposal_modal" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Total Proposals</h3>
-          <p className="py-4">
+          <h3 className="font-bold text-lg text-white">Total Proposals</h3>
+          <p className="py-4 text-white">
             {proposalCount === null
               ? "Fetching the total number of proposals..."
               : `The total number of proposals passed in Hedemy DAO are ${proposalCount}.`}
@@ -225,8 +225,8 @@ function Course() {
       {/* Finalize Proposal Modal */}
       <dialog id="finalize_modal" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Finalize Proposal</h3>
-          <p className="py-4">Enter the Proposal ID to finalize the course.</p>
+          <h3 className="font-bold text-lg text-white">Finalize Proposal</h3>
+          <p className="py-4 text-white">Enter the Proposal ID to finalize the course.</p>
           <input
             type="text"
             placeholder="Enter Proposal ID"
@@ -235,7 +235,7 @@ function Course() {
             onChange={handleFinalizeProposalIdChange}
           />
           <button
-            className="btn btn-active btn-neutral w-full text-sm"
+            className="btn btn-outlline btn-primary w-full text-sm"
             onClick={finalize_course}
           >
             Finalize the Course
