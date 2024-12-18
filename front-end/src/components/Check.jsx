@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { connectWallet } from "../components/ConnectWallet";
 import { ethers } from "ethers";
-import HedemyDAO from "../abi/Hedemy_DAO_abi.json"; // Import your contract ABI
+import HedemyDAO from "../contracts/HedemyDAO.json"; // Import your contract ABI
 
 export default function OpenModal() {
-  const { ethereum } = window;
   const [courseName, setCourseName] = useState('');
   const [courseDetails, setCourseDetails] = useState('');
   const [courseFee, setCourseFee] = useState('');
@@ -15,13 +14,6 @@ export default function OpenModal() {
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [contract, setContract] = useState(null);
-
-  const [transactionStatus, setTransactionStatus] = useState("");
-  const [txHash, setTxHash] = useState("");
-
-
-  const contract_address="0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7";
-  const contract_abi=HedemyDAO.abi;
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -63,52 +55,40 @@ export default function OpenModal() {
     }
   };
 
-  const connect_wallet = async () => {
-    if (!ethereum) {
-      alert("MetaMask is not installed!");
-      return;
-    }
-    try {
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+  const handleWalletConnection = async () => {
+    const account = await connectWallet();
+    if (account) {
+      setWalletAddress(account);
+
+      // Set up the Ether.js provider and contract instance
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const deployedNetwork = HedemyDAO.networks[await provider.getNetwork().then(n => n.chainId)];
+      const contractInstance = new ethers.Contract(deployedNetwork.address, HedemyDAO.abi, signer);
+
+      setContract(contractInstance);
       setWalletConnected(true);
-      setWalletAddress(accounts[0]);
-      console.log("Connected account:", accounts[0]);
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
     }
   };
-
-  const send_proposal = async() => {
-    if (!ethereum) {
-        alert("Please install MetaMask!");
-        return;
-      }
-      try {
-        const provider = new ethers.BrowserProvider(ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contract_address, contract_abi, signer);
-  
-        // console.log("Check the params before passing to contract");
-        // console.log(`course name is ${courseName}and the ipfs link is ${ipfsLink}`);
-        const tx = await contract.proposeCourse(courseName,ipfsLink);
-        setTransactionStatus("Transaction in progress...");
-        await tx.wait();
-        setTransactionStatus("Transaction successful");
-        setTxHash(tx.hash);
-        console.log("Transaction details:", tx);
-        console.log(`Transaction details: https://hashscan.io/testnet/tx/${tx.hash}`);
-      } catch (error) {
-        console.error("Error on send proposal", error);
-        setTransactionStatus("Transaction failed.");
-      }
-  }
-
-  
 
   const handlePropose = async () => {
-    await send_proposal();
+    try {
+      if (!contract) {
+        alert("Contract not initialized!");
+        return;
+      }
+
+      const tx = await contract.proposeCourse(courseName, ipfsLink, {
+        from: walletAddress
+      });
+
+      await tx.wait(); // Wait for the transaction to be mined
+      alert("Course proposed successfully!");
+    } catch (error) {
+      console.error("Error proposing course: ", error);
+      alert("An error occurred while proposing the course.");
+    }
   };
-  
 
   const isUploadButtonDisabled = !courseName || !courseDetails || !courseFee || !file;
   const isProposeButtonDisabled = uploadStatus !== "File Uploaded Successfully!" || !walletConnected;
@@ -191,16 +171,18 @@ export default function OpenModal() {
                 The content is successfully uploaded in IPFS
               </a>
             )}
+
             {/* Connect Wallet */}
-            {!walletConnected ? (
+            {!walletConnected && (
               <button
                 type="button"
                 className="btn btn-info mt-2"
-                onClick={connect_wallet}
+                onClick={handleWalletConnection}
               >
                 Connect Wallet
               </button>
-            ) : (
+            )}
+            {walletConnected && (
               <button className="btn btn-outline btn-primary">Wallet Connected: {walletAddress}</button>
             )}
 
@@ -210,8 +192,7 @@ export default function OpenModal() {
                 type="button"
                 className="btn btn-neutral"
                 onClick={handlePropose}
-                disabled={isUploadButtonDisabled}
-                
+                disabled={isProposeButtonDisabled}
               >
                 Propose DAO
               </button>
