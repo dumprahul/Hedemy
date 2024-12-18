@@ -21,15 +21,36 @@ function Course() {
       alert("MetaMask is not installed!");
       return;
     }
+    
     try {
+      // Request wallet connection
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const walletAddress = accounts[0];
+      
+      // Connect to the contract
+      const provider = new ethers.BrowserProvider(ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contract_address, contract_abi, signer);
+
+      // Check DAO membership
+      const isMember = await contract.daoMembers(walletAddress);
+      if (!isMember) {
+        alert("You are not a DAO member!");
+        setWalletConnected(false);
+        console.log("You are not a DAO member")
+        return;
+      }
+  
+      // Update state for connected wallet
       setWalletConnected(true);
-      setWalletAddress(accounts[0]);
-      console.log("Connected account:", accounts[0]);
+      setWalletAddress(walletAddress);
+      console.log("You are DAO member")
+      console.log("Connected account:", walletAddress);
     } catch (error) {
       console.error("Error connecting wallet:", error);
     }
   };
+  
 
   const totalproposal = async () => {
     try {
@@ -63,7 +84,7 @@ function Course() {
       const provider = new ethers.BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contract_address, contract_abi, signer);
-      
+
       const finalize = await contract.finalizeProposal(finalizeProposalId);
       await finalize.wait();
       console.log("Proposal finalized:", finalize.hash);
