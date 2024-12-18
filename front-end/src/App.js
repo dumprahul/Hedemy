@@ -1,10 +1,10 @@
-import Course from './components/Course';
-import ProposeDAO from './components/ProposeDAO';
+
+import Stake from './components/Stake';
 
 function App() {
   return (
     <div>
-      <Course/>
+      <Stake/>
     </div>
   );
 }
