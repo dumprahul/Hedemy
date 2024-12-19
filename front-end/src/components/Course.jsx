@@ -118,10 +118,10 @@ function Course() {
         }}
       >
         <h1 className="text-5xl font-bold mb-4 text-white">
-          Cast your votes to approve the courses.
+          Cast your votes to approve the courses🗳️🔥.
         </h1>
         <p className="text-lg text-center mb-6 px-2 text-white font-bold">
-          Only the DAO Members can vote. Connect Wallet to see your eligibility in the DAO. 
+          Only the DAO Members can vote. Connect Wallet to see your eligibility in the DAO🔐. 
         </p>
         {!walletConnected ? (
           <button
@@ -136,7 +136,7 @@ function Course() {
               className="btn btn-active btn-neutral px-6 py-2 text-white"
               onClick={() => document.getElementById('vote_modal').showModal()}
             >
-              Vote
+              Vote🗳️
             </button>
             <button
               className="btn btn-active btn-neutral px-6 py-2 text-white"
@@ -145,13 +145,13 @@ function Course() {
                 document.getElementById('proposal_modal').showModal();
               }}
             >
-              Total Proposals
+              Total Proposals🔥
             </button>
             <button
               className="btn btn-active btn-neutral px-6 py-2 text-white"
               onClick={() => document.getElementById('finalize_modal').showModal()}
             >
-              Finalize the Proposal
+              Finalize the Proposal🎉
             </button>
           </div>
         )}

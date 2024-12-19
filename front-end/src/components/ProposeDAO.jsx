@@ -12,9 +12,9 @@ function ProposeDAO() {
         backgroundPosition: "center",
       }}
     >
-      <h1 className="text-5xl font-bold mb-4 text-white">propose a course in hedemy DAO.</h1>
+      <h1 className="text-5xl font-bold mb-4 text-white">propose a course in hedemy DAO🎉</h1>
       <p className="text-lg text-center mb-6 px-2 text-white font-bold">
-        Hedemy DAO chooses perfect tailored courses for the learners in hedera environement.
+        Hedemy DAO chooses perfect tailored courses for the learners in hedera environement📗
       </p>
       <OpenModal/>
     </div>

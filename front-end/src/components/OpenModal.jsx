@@ -110,9 +110,9 @@ export default function OpenModal() {
         // await get_proposals.wait();
         // console.log("proposal details",get_proposals);
 
-        const finalize_proposal= await contract.finalizeProposal(8);
-        await finalize_proposal.wait();
-        console.log("proposal details",finalize_proposal);
+        // const finalize_proposal= await contract.finalizeProposal(8);
+        // await finalize_proposal.wait();
+        // console.log("proposal details",finalize_proposal);
 
 
       } catch (error) {
@@ -134,7 +134,7 @@ export default function OpenModal() {
   return (
     <div>
       <button className="btn btn-active btn-neutral px-6 py-2 text-white" onClick={() => document.getElementById('my_modal_4').showModal()}>
-        Propose a Course
+        Propose a Course🎉
       </button>
       <dialog id="my_modal_4" className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
@@ -165,7 +165,7 @@ export default function OpenModal() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="courseFee" className="block text-sm font-medium text-white">Enter the Course Fee</label>
+              <label htmlFor="courseFee" className="block text-sm font-medium text-white">Enter the Course Fee in HBAR</label>
               <input
                 type="number"
                 id="courseFee"
@@ -195,7 +195,7 @@ export default function OpenModal() {
                 onClick={uploadToIPFS}
                 disabled={isUploadButtonDisabled}
               >
-                Upload to IPFS
+                Upload to IPFS 🔗
               </button>
             )}
 
@@ -206,7 +206,7 @@ export default function OpenModal() {
                 rel="noopener noreferrer"
                 className="btn btn-success mt-2"
               >
-                The content is successfully uploaded in IPFS
+                The content is successfully uploaded in IPFS 🧿
               </a>
             )}
             {/* Connect Wallet */}
@@ -216,10 +216,10 @@ export default function OpenModal() {
                 className="btn btn-info mt-2"
                 onClick={connect_wallet}
               >
-                Connect Wallet
+                Connect Wallet 🔗
               </button>
             ) : (
-              <button className="btn btn-outline btn-primary">Wallet Connected: {walletAddress}</button>
+              <button className="btn btn-outline btn-primary">Wallet Connected: {walletAddress} ✅</button>
             )}
 
             {/* Propose on DAO */}
@@ -231,7 +231,7 @@ export default function OpenModal() {
                 disabled={isUploadButtonDisabled}
                 
               >
-                Propose DAO
+                Propose DAO 🎉
               </button>
               <button type="button" className="btn" onClick={() => document.getElementById('my_modal_4').close()}>Close</button>
             </div>

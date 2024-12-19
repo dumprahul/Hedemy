@@ -7,11 +7,9 @@ export default function StakeOpenModal() {
   const [transactionStatus, setTransactionStatus] = useState("");
   const [txHash, setTxHash] = useState("");
   const [stakeSuccess, setStakeSuccess] = useState(false); // Tracks if stake was successful
-  const [showQuiz, setShowQuiz] = useState(false); // Tracks if quiz should be shown
-  const [quizAnswers, setQuizAnswers] = useState([]); // Stores answers to quiz questions
 
   const { ethereum } = window;
-  const contract_address = "0x2aC5b31Ba5cC37396e18a8946f4b82Bc913F160f";
+  const contract_address = "0xa024EE8e12700AAEBA374AA3B4186Ba62e2C6645";
   const contract_abi = Stake.abi;
 
   const stake_function = async () => {
@@ -19,16 +17,16 @@ export default function StakeOpenModal() {
       alert("Please install MetaMask!");
       return;
     }
-
+  
     try {
       const provider = new ethers.BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contract_address, contract_abi, signer);
-
+  
       // Convert the amount to tinybars (1 HBAR = 1,000,000 tinybars)
       const amountInTinybars = ethers.parseUnits(amount, "ether");
       console.log("amountin_tinybars", amountInTinybars);
-
+  
       const tx = await contract.stake({ value: amountInTinybars });
       setTransactionStatus("Transaction in progress...");
       await tx.wait();
@@ -36,14 +34,15 @@ export default function StakeOpenModal() {
       setTxHash(tx.hash);
       setStakeSuccess(true); // Mark stake as successful
       console.log("Stake transaction details:", tx);
-
+  
+      // Immediately call return_creator after successful staking
       await return_creator();
     } catch (error) {
       console.error("Error on staking", error);
       setTransactionStatus("Stake transaction failed.");
     }
   };
-
+  
   const return_creator = async () => {
     if (!ethereum) {
       alert("Please install MetaMask!");
@@ -65,61 +64,6 @@ export default function StakeOpenModal() {
       setTransactionStatus("Creator return failed.");
     }
   };
-
-
-  const return_stake = async () => {
-    if (!ethereum) {
-      alert("Please install MetaMask!");
-      return;
-    }
-    try {
-      const provider = new ethers.BrowserProvider(ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contract_address, contract_abi, signer);
-
-      const returnstake = await contract.return_stake();
-      setTransactionStatus("Transaction in progress...");
-      await returnstake.wait();
-      setTransactionStatus("Transaction successful");
-      setTxHash(returnstake.hash);
-      console.log("Transaction details:", returnstake);
-    } catch (error) {
-      console.error("Error while returning stake", error);
-    }
-  };
-
-  const handleQuizAnswer = (questionIndex, answer) => {
-    const updatedAnswers = [...quizAnswers];
-    updatedAnswers[questionIndex] = answer;
-    setQuizAnswers(updatedAnswers);
-  };
-
-  const handleFinishTest = () => {
-    setShowQuiz(true); // Show quiz
-  };
-
-  const handleFinishCourse = () => {
-    return_stake(); // Call return_stake on finishing course
-  };
-
-  const quizQuestions = [
-    {
-      question: "What is Hedera Hashgraph primarily known for?",
-      options: ["Blockchain alternative", "Search engine"],
-    },
-    {
-      question: "Which token is native to the Hedera Hashgraph network?",
-      options: ["HBAR", "ETH"],
-    },
-    {
-      question: "Hedera Hashgraph uses which consensus algorithm?",
-      options: ["Asynchronous Byzantine Fault Tolerance (aBFT)", "Proof of Work (PoW)"],
-    },
-    {
-      question: "What is the main advantage of Hedera over traditional blockchains?",
-      options: ["Higher throughput and low latency", "Expensive transaction fees"],
-    },
-  ];
 
   return (
     <div>
@@ -146,6 +90,9 @@ export default function StakeOpenModal() {
               <p className="py-2 text-xl text-white">
                 Course Status: Approved by HedemyDAO
               </p>
+              <p className="py-2 text-xl text-white">
+                DAO Contract: 0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7
+              </p>
               <div className="modal-action mt-8 flex justify-center">
                 <form method="dialog" className="flex items-center space-x-6">
                   <button className="btn btn-primary" onClick={stake_function}>
@@ -155,42 +102,6 @@ export default function StakeOpenModal() {
                 </form>
               </div>
             </>
-          ) : showQuiz ? (
-            <>
-              <h3 className="font-bold text-lg text-center mb-8 text-white">
-                Quiz
-              </h3>
-              {quizQuestions.map((q, index) => (
-  <div key={index} className="mb-6 flex flex-col items-start">
-    <p className="text-xl text-white mb-4">{q.question}</p>
-    <div className="flex flex-col space-y-2">
-      {q.options.map((option, optionIndex) => (
-        <label key={optionIndex} className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name={`question-${index}`}
-            value={option}
-            onChange={() => handleQuizAnswer(index, option)}
-            className="radio radio-primary"
-          />
-          <span className="text-white">{option}</span>
-        </label>
-      ))}
-    </div>
-  </div>
-))}
-
-              {quizAnswers.length === quizQuestions.length && (
-                <div className="modal-action mt-8 flex justify-center">
-                  <button
-                    className="btn btn-success"
-                    onClick={handleFinishCourse}
-                  >
-                    Finish the Course
-                  </button>
-                </div>
-              )}
-            </>
           ) : (
             <>
               <h3 className="font-bold text-lg text-center mb-8 text-white">
@@ -198,18 +109,15 @@ export default function StakeOpenModal() {
               </h3>
               <p className="py-2 text-xl text-center text-blue-500 underline">
                 <a
-                  href="https://gateway.pinata.cloud/ipfs/QmWk44a2v4B1VJ9Fx19hyyFABD5DDer3ZzYjmevPyP3iid"
+                  href="https://hashscan.io/testnet/contract/0.0.5282523?pf=1&p=1&k=1734563726.031953311"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  View the full course content on IPFS
+                  View on Hashscan
                 </a>
               </p>
               <div className="modal-action mt-8 flex justify-center">
-                <button
-                  className="btn btn-success"
-                  onClick={handleFinishTest}
-                >
+                <button className="btn btn-success">
                   Finish Test by Taking Test
                 </button>
               </div>
@@ -218,7 +126,9 @@ export default function StakeOpenModal() {
           {transactionStatus && (
             <p className="text-center mt-4">{transactionStatus}</p>
           )}
-          {txHash && <p className="text-center mt-2">Tx Hash: {txHash}</p>}
+          {txHash && (
+            <p className="text-center mt-2">Tx Hash: {txHash}</p>
+          )}
         </div>
       </dialog>
     </div>
