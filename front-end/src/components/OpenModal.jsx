@@ -21,7 +21,7 @@ export default function OpenModal() {
   
 
 
-  const contract_address="0x6D58E99ABEac44114C215182b82A125C84fc23BA";
+  const contract_address="0xE814b3047c05EFCa5428B854bc6BB71f5bA9BFD3";
   const contract_abi=HedemyDAO.abi;
 
   const handleFileChange = (e) => {
@@ -98,6 +98,7 @@ export default function OpenModal() {
         setTxHash(tx.hash);
         console.log("Transaction details:", tx);
 
+
         const count = await contract.proposalCount();
         console.log("Proposal Count:", count.toString());
 
@@ -125,6 +126,7 @@ export default function OpenModal() {
 
   const handlePropose = async () => {
     await send_proposal();
+
   };
   
 

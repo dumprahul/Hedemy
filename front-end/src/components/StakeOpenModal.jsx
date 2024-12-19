@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import Stake from "../abi/Hedemy_Stake_abi.json";
 
 export default function StakeOpenModal() {
-  const [amount, setAmount] = useState("20"); // Fixed amount of HBAR to send
+  const [amount, setAmount] = useState("50"); // Fixed amount of HBAR to send
   const [transactionStatus, setTransactionStatus] = useState("");
   const [txHash, setTxHash] = useState("");
   const [stakeSuccess, setStakeSuccess] = useState(false); // Tracks if stake was successful
@@ -11,7 +11,7 @@ export default function StakeOpenModal() {
   const [quizAnswers, setQuizAnswers] = useState([]); // Stores answers to quiz questions
 
   const { ethereum } = window;
-  const contract_address = "0x2aC5b31Ba5cC37396e18a8946f4b82Bc913F160f";
+  const contract_address = "0xE8BDC8AFaCb5219aAB50C567dacE2aA4D0a71f5d";
   const contract_abi = Stake.abi;
 
   const stake_function = async () => {
