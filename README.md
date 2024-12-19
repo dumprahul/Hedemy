@@ -16,6 +16,13 @@ Contract Deployed at - 0xE8BDC8AFaCb5219aAB50C567dacE2aA4D0a71f5d
 Deployed at the HederaTestNet
 View here- https://hashscan.io/testnet/contract/0.0.5288554?pf=1
 
+**Routes used**
+1.http://localhost:57415/ProposeDAO- Page for Propose course on DAO
+1.http://localhost:57415/Course- Page to cast Votes
+1.http://localhost:57415/Stake- Page to stake the courses
+
+
+
 ## Prerequisites
 - Node.js (>= 12.x)
 - npm or Yarn
