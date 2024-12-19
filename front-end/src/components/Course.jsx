@@ -13,7 +13,7 @@ function Course() {
   const [isVoteEnabled, setIsVoteEnabled] = useState(false);
   const [finalizeProposalId, setFinalizeProposalId] = useState("");
 
-  const contract_address = "0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7";
+  const contract_address = "0x6D58E99ABEac44114C215182b82A125C84fc23BA";
   const contract_abi = HedemyDAO.abi;
 
   const connect_wallet = async () => {

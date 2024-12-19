@@ -21,7 +21,7 @@ export default function OpenModal() {
   
 
 
-  const contract_address="0x6338d15778C06Fa77042A635Fceb32e4a6Ee9dA7";
+  const contract_address="0x6D58E99ABEac44114C215182b82A125C84fc23BA";
   const contract_abi=HedemyDAO.abi;
 
   const handleFileChange = (e) => {
