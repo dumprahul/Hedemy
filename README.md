@@ -17,9 +17,9 @@ Deployed at the HederaTestNet
 View here- https://hashscan.io/testnet/contract/0.0.5288554?pf=1
 
 **Routes used**
-/n1.http://localhost:3000/ProposeDAO- Page for Propose course on DAO
-/n1.http://localhost:3000/Course- Page to cast Votes
-/n1.http://localhost:3000/Stake- Page to stake the courses
+1.http://localhost:3000/ProposeDAO- Page for Propose course on DAO
+2.http://localhost:3000/Course- Page to cast Votes
+3.http://localhost:3000/Stake- Page to stake the courses
 
 
 
