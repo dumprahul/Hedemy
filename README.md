@@ -1,6 +1,4 @@
-# Project Title
-
-Hedemy - Decentralized Web Learning Platform
+# Hedemy - Decentralized Web Learning Platform
 
 **Project Description:**
 
