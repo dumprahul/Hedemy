@@ -7,7 +7,7 @@ Hedemy - Decentralized Web Learning Platform
  Hedemy is a decentralized web learning platform that empowers course creators to propose, get approval, and publish courses directly to a decentralized autonomous organization (DAO). Learners can stake an amount of cryptocurrency to enroll in a course. Once a course is completed, half of the staked amount is rewarded to the course creator, and the remaining half is returned to the learner. This ensures that course quality is maintained and rewards both creators and learners fairly.
 
 **Deployed Contracts**
-Hedemy_DA0 contract:
+**Hedemy_DA0 contract:**
 
 Contract Deployed at- 0xE814b3047c05EFCa5428B854bc6BB71f5bA9BFD3
 Deployed at the HederaTestNet
